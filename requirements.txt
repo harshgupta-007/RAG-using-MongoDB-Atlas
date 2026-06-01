@@ -20,3 +20,5 @@ pydantic
 pydantic-settings
 
 pytest
+
+google-generativeai
