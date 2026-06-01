@@ -1,37 +1,35 @@
-from src.pipelines.retrieval_pipeline import (
-    RetrievalPipeline
+from src.pipelines.rag_pipeline import (
+    RAGPipeline
 )
 
-pipeline = RetrievalPipeline()
+pipeline = RAGPipeline()
 
-result = pipeline.retrieve(
+result = pipeline.ask(
     "Show aggregation examples from Chapter 6"
 )
 
-print("\nINTENT\n")
+print("\nQUESTION\n")
+print(result["question"])
 
-print(
-    result["intent"]
-)
+print("\nINTENT\n")
+print(result["intent"])
 
 print("\nFILTERS\n")
+print(result["filters"])
 
-print(
-    result["filters"]
-)
+print("\nANSWER\n")
+print(result["answer"])
 
-print("\nPARENTS\n")
+print("\nSOURCES\n")
 
-for doc in result[
-    "parent_documents"
-]:
+for source in result["sources"]:
 
     print(
-        doc["_id"]
+        source["_id"]
     )
 
     print(
-        doc["metadata"]
+        source["metadata"]
     )
 
     print()

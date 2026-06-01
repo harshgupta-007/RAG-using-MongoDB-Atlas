@@ -45,11 +45,26 @@ class RAGPipeline:
             "answer":
                 answer,
 
-            "context":
-                retrieval_result["context"],
+            "intent":
+                retrieval_result[
+                    "intent"
+                ],
+
+            "filters":
+                retrieval_result[
+                    "filters"
+                ],
 
             "sources":
                 retrieval_result[
                     "parent_documents"
-                ]
+                ],
+
+            "context":
+                retrieval_result[
+                    "context"
+                ],
+
+            "retrieval":
+                retrieval_result
         }

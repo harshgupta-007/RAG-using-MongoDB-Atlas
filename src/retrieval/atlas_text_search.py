@@ -1,7 +1,6 @@
 from src.database.collections import (
     child_collection
 )
-from pprint import pprint
 class AtlasTextSearch:
 
     def search(
@@ -10,17 +9,14 @@ class AtlasTextSearch:
         k=10,
         filters=None
     ):
-        print("\nQUERY:", query)
 
         if filters:
-            print("FILTERS:", filters)
 
             chapter_number = (
                 filters.get(
                     "metadata.chapter_number"
                 )
             )
-            print("chapter_number =", repr(chapter_number))
             pipeline = [
                 {
                     "$search": {
@@ -88,8 +84,6 @@ class AtlasTextSearch:
                     }
                 }
             ]
-        print("\nPIPELINE:")
-        pprint(pipeline)
         return list(
             child_collection.aggregate(
                 pipeline
