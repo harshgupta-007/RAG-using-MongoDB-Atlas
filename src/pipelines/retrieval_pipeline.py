@@ -1,9 +1,9 @@
-from src.embedding.voyage_embedder import (
-    VoyageEmbedder
+from src.retrieval.hybrid_search import (
+    HybridSearch
 )
 
-from src.retrieval.vector_search import (
-    AtlasVectorSearch
+from src.reranking.voyage_reranker import (
+    VoyageReranker
 )
 
 from src.retrieval.parent_retriever import (
@@ -19,59 +19,99 @@ class RetrievalPipeline:
 
     def __init__(self):
 
-        self.embedder = VoyageEmbedder()
+        self.hybrid_search = HybridSearch()
 
-        self.vector_search = AtlasVectorSearch()
+        self.reranker = VoyageReranker()
 
         self.parent_retriever = ParentRetriever()
+
+        self.context_builder = ContextBuilder()
 
     def retrieve(
         self,
         query: str,
-        top_k: int = 5
+        top_k: int = 10,
+        rerank_k: int = 5
     ):
-        self.context_builder = (
-            ContextBuilder()
-        )
 
-        # Step 1
-        query_embedding = (
-            self.embedder.embed_query(query)
-        )
-
-        # Step 2
-        child_results = (
-            self.vector_search.search(
-                query_embedding,
+        # Step 1: Hybrid Search
+        hybrid_result = (
+            self.hybrid_search.search(
+                query=query,
                 k=top_k
             )
         )
 
-        # Step 3
-        parent_results = (
-            self.parent_retriever.get_parents(
-                child_results
+        # Step 2: Rerank
+        reranked_chunks = (
+            self.reranker.rerank(
+                query=query,
+                documents=hybrid_result[
+                    "hybrid_results"
+                ],
+                top_k=rerank_k
             )
         )
 
+        # Step 3: Parent Retrieval
+        parent_results = (
+            self.parent_retriever.get_parents(
+                reranked_chunks
+            )
+        )
+
+        # Step 4: Context Building
         context = (
-            self.context_builder
-            .build_context(
+            self.context_builder.build_context(
                 parent_results
             )
         )
 
         return {
+
             "query": query,
 
-            "num_child_chunks":
-                len(child_results),
+            "num_vector_results":
+                len(
+                    hybrid_result[
+                        "vector_results"
+                    ]
+                ),
+
+            "num_text_results":
+                len(
+                    hybrid_result[
+                        "text_results"
+                    ]
+                ),
+
+            "num_hybrid_results":
+                len(
+                    hybrid_result[
+                        "hybrid_results"
+                    ]
+                ),
 
             "num_parent_documents":
                 len(parent_results),
 
-            "child_chunks":
-                child_results,
+            "vector_results":
+                hybrid_result[
+                    "vector_results"
+                ],
+
+            "text_results":
+                hybrid_result[
+                    "text_results"
+                ],
+
+            "hybrid_results":
+                hybrid_result[
+                    "hybrid_results"
+                ],
+
+            "reranked_chunks":
+                reranked_chunks,
 
             "parent_documents":
                 parent_results,

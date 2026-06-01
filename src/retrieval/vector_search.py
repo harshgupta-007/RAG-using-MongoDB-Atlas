@@ -5,9 +5,10 @@ from src.config.settings import settings
 class AtlasVectorSearch:
 
     def search(
-        self,
-        query_embedding,
-        k=5
+    self,
+    query_embedding,
+    k=5,
+    filters=None
     ):
 
         pipeline = [
@@ -23,7 +24,7 @@ class AtlasVectorSearch:
                         query_embedding,
 
                     "numCandidates":
-                        20,
+                        100,
 
                     "limit":
                         k

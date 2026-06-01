@@ -8,32 +8,20 @@ result = pipeline.retrieve(
     "What is aggregation pipeline?"
 )
 
-print("\nQUERY\n")
+print("\nRERANKED CHUNKS\n")
 
-print(result["query"])
+for doc in result["reranked_chunks"]:
 
-print("\nCHILD CHUNKS\n")
+    print(
+        doc["_id"],
+        doc["rerank_score"]
+    )
 
-for chunk in result["child_chunks"]:
+print("\nPARENTS\n")
 
-    print("=" * 80)
+for doc in result["parent_documents"]:
 
-    print(chunk["_id"])
-
-    print(chunk["parent_id"])
-
-    print(chunk["score"])
-
-    print(chunk["metadata"])
-
-print("\nPARENT DOCUMENTS\n")
-
-for parent in result["parent_documents"]:
-
-    print("=" * 80)
-
-    print(parent["_id"])
-
-    print(parent["metadata"])
-
-    print(parent["text"][:500])
+    print(
+        doc["_id"],
+        doc["match_count"]
+    )
