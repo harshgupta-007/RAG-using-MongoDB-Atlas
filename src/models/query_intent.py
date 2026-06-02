@@ -4,14 +4,14 @@ from typing import Optional
 
 class QueryIntent(BaseModel):
 
-    intent: str
+    intent: str = "find"
 
-    chapter: Optional[str] = None
+    chapter: str | None = None
 
-    section: Optional[str] = None
+    section: str | None = None
 
-    page_start: Optional[int] = None
+    page_start: int | None = None
 
-    page_end: Optional[int] = None
+    page_end: int | None = None
 
-    search_query: str
+    search_query: str = ""

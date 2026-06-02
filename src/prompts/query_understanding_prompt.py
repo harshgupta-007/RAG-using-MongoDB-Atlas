@@ -12,6 +12,10 @@ Extract:
 
 Return ONLY valid JSON.
 
+Important:
+If a field is unknown, return null.
+Never return empty strings.
+
 User Query:
 {query}
 """
