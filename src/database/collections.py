@@ -13,3 +13,7 @@ parent_collection = db[
 child_collection = db[
     settings.CHILD_COLLECTION
 ]
+
+retrieval_logs_collection = (
+    db["retrieval_logs"]
+)

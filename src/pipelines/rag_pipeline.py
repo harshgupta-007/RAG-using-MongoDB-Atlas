@@ -6,7 +6,9 @@ from src.generation.gemini_generator import (
     GeminiGenerator
 )
 
-
+from src.utils.logger import (
+    logger
+)
 class RAGPipeline:
 
     def __init__(self):
@@ -23,48 +25,57 @@ class RAGPipeline:
         self,
         question
     ):
+        try:
 
-        retrieval_result = (
-            self.retrieval.retrieve(
-                question
+            retrieval_result = (
+                self.retrieval.retrieve(
+                    question
+                )
             )
-        )
 
-        answer = (
-            self.generator.generate_answer(
-                question,
-                retrieval_result["context"]
+            answer = (
+                self.generator.generate_answer(
+                    question,
+                    retrieval_result["context"]
+                )
             )
-        )
 
-        return {
+            return {
 
-            "question":
-                question,
+                "question":
+                    question,
 
-            "answer":
-                answer,
+                "answer":
+                    answer,
 
-            "intent":
-                retrieval_result[
-                    "intent"
-                ],
+                "intent":
+                    retrieval_result[
+                        "intent"
+                    ],
 
-            "filters":
-                retrieval_result[
-                    "filters"
-                ],
+                "filters":
+                    retrieval_result[
+                        "filters"
+                    ],
 
-            "sources":
-                retrieval_result[
-                    "parent_documents"
-                ],
+                "sources":
+                    retrieval_result[
+                        "parent_documents"
+                    ],
 
-            "context":
-                retrieval_result[
-                    "context"
-                ],
+                "context":
+                    retrieval_result[
+                        "context"
+                    ],
 
-            "retrieval":
-                retrieval_result
-        }
+                "retrieval":
+                    retrieval_result
+            }
+        
+        except Exception as e:
+
+            logger.exception(
+                "RAG Pipeline Failed"
+            )
+
+            raise

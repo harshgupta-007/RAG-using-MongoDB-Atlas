@@ -19,6 +19,9 @@ from src.chat.chat_service import (
 from src.pipelines.rag_pipeline import (
     RAGPipeline
 )
+from src.utils.logger import (
+    logger
+)
 
 # =====================================================
 # INITIALIZATION
@@ -238,14 +241,27 @@ if prompt:
     with st.spinner(
         "Thinking..."
     ):
+        try:
+    
 
-        result = (
-            st.session_state
-            .pipeline
-            .ask(
-                prompt
+            result = (
+                st.session_state
+                .pipeline
+                .ask(
+                    prompt
+                )
             )
-        )
+        except Exception as e:
+
+            logger.exception(
+                "Chat Request Failed"
+            )
+
+            st.error(
+                "⚠️ Unable to process your request."
+            )
+
+            st.stop()
 
     answer = result["answer"]
 

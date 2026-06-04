@@ -5,6 +5,9 @@ from src.database.collections import (
     db
 )
 
+from src.utils.logger import (
+    logger
+)
 
 class ChatHistory:
 
@@ -40,6 +43,9 @@ class ChatHistory:
                     datetime.utcnow()
             }
         )
+        logger.info(
+            f"Session Created: {session_id}"
+        )
 
         return session_id
     
@@ -72,6 +78,10 @@ class ChatHistory:
                 "created_at":
                     datetime.utcnow()
             }
+        )
+        logger.info(
+            f"Message Saved | "
+            f"Role={role}"
         )
 
     def get_messages(
