@@ -20,7 +20,7 @@ from src.utils.exceptions import (
 )
 
 
-from google.genai.errors import ClientError
+# from google.genai.errors import ClientError
 class LLMQueryParser:
 
     def __init__(self):
@@ -59,14 +59,31 @@ class LLMQueryParser:
                     )
                     # If successful, break out of the fallback loop immediately
                     break
-                except ClientError as e:
-                    # Check for 429 Rate Limit/Quota Exhaustion specifically
-                    if e.status_code == 429:
-                        logger.warning(f"⚠️ {model_name} rate limit reached. Attempting fallback model...")
-                        continue
-                    # If it's a different client error (e.g., 400 Bad Request), fail early
-                    raise e
+                # except ClientError as e:
+                #     # Check for 429 Rate Limit/Quota Exhaustion specifically
+                #     if e.status_code == 429:
+                #         logger.warning(f"⚠️ {model_name} rate limit reached. Attempting fallback model...")
+                #         continue
+                #     # If it's a different client error (e.g., 400 Bad Request), fail early
+                #     raise e
 
+                except Exception as e:
+
+                    error_text = str(e)
+
+                    if "429" in error_text:
+
+                        logger.warning(
+                            f"{model_name} rate limit reached. Trying fallback model..."
+                        )
+
+                        continue
+
+                    logger.exception(
+                        f"{model_name} failed"
+                    )
+
+                    raise
             # If the loop finished without getting a response from any model
             if response is None:
                 raise RuntimeError(
