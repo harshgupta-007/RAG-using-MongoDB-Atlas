@@ -2,10 +2,11 @@ __pycache__/
 *.pyc
 
 .env
-
+test_env/
 .venv/
 venv/
 
+requirements_full.txt
 logs/*.log
 
 .ipynb_checkpoints/
