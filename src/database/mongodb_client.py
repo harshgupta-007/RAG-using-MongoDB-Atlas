@@ -6,6 +6,8 @@ from src.config.settings import settings
 class MongoDBClient:
 
     def __init__(self):
+        print("MONGO_URI exists:", bool(settings.MONGO_URI))
+        print("MONGO_URI value:", repr(settings.MONGO_URI))
 
         self.client = MongoClient(
             settings.MONGO_URI
