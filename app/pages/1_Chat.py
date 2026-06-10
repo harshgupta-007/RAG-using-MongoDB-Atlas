@@ -12,6 +12,12 @@ if str(ROOT_DIR) not in sys.path:
 
 import streamlit as st
 
+st.set_page_config(
+    page_title="MongoDB Atlas RAG",
+    page_icon="🤖",
+    layout="wide"
+)
+
 from src.chat.chat_service import (
     ChatService
 )
@@ -39,13 +45,19 @@ if "pipeline" not in st.session_state:
 # SIDEBAR
 # =====================================================
 
-st.sidebar.title("Chats")
+# st.sidebar.title("Chats")
 
 sessions = (
     chat_service
     .get_all_sessions()
 )
+st.sidebar.title(
+    "🗂️ Chat Sessions"
+)
 
+st.sidebar.caption(
+    f"{len(sessions)} Sessions"
+)
 # =====================================================
 # NEW CHAT
 # =====================================================
@@ -103,7 +115,11 @@ for session in sessions:
 # =====================================================
 
 st.title(
-    "💬 MongoDB Atlas RAG Chat"
+    "🤖 MongoDB Atlas RAG Assistant"
+)
+
+st.caption(
+    "Hybrid Search • Voyage Reranker • Gemini • MongoDB Atlas"
 )
 
 # =====================================================
@@ -125,8 +141,14 @@ messages = (
 
 for message in messages:
 
+    # with st.chat_message(
+    #     message["role"]
+    # ):
     with st.chat_message(
-        message["role"]
+        message["role"],
+        avatar="👤"
+        if message["role"] == "user"
+        else "🤖"
     ):
 
         st.markdown(
@@ -147,8 +169,12 @@ for message in messages:
 
             if metadata:
 
+                # with st.expander(
+                #     "Intent"
+                # ):
                 with st.expander(
-                    "Intent"
+                    "🧠 Query Understanding",
+                    expanded=False
                 ):
 
                     st.write(
@@ -157,8 +183,13 @@ for message in messages:
                         )
                     )
 
+                # with st.expander(
+                #     "Filters"
+                # ):
+                    
                 with st.expander(
-                    "Filters"
+                    "📋 Metadata Filters",
+                    expanded=False
                 ):
 
                     st.json(
@@ -168,8 +199,12 @@ for message in messages:
                         )
                     )
 
+                # with st.expander(
+                #     "Sources"
+                # ):
                 with st.expander(
-                    "Sources"
+                    "📚 Retrieved Sources",
+                    expanded=False
                 ):
 
                     st.write(
@@ -305,7 +340,10 @@ if prompt:
                     source["_id"]
                 )
 
-                st.write(
+                # st.write(
+                #     source["metadata"]
+                # )
+                st.json(
                     source["metadata"]
                 )
 
